@@ -56,14 +56,14 @@ Purpose:  This project will show you the difference between member functions and
 #include <string>
 struct T
 {
-    T(<#type name#> v, const char* <#variable name#>)   //1
-    //2
-    //3
+    T( int v, const char* s ) : value(v), name(s) {}  //1
+    int value; //2
+    std::string name; //3
 };
 
-struct <#structName1#>                                //4
+struct CompareFuncForT                                //4
 {
-    <#type name#> compare(<#type name#> a, <#type name#> b) //5
+    T* compare(T* a, T* b) //5
     {
         if( a->value < b->value ) return a;
         if( a->value > b->value ) return b;
@@ -73,31 +73,37 @@ struct <#structName1#>                                //4
 
 struct U
 {
-    float <#name1#> { 0 }, <#name2#> { 0 };
-    <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
+    float fval_1 { 0 }, fval_2 { 0 };
+    float ConvergeUVars( float* updatedValue )      //12
     {
-        
+        std::cout << "U's fval_1 value: " << fval_1 << std::endl;
+        fval_1 = *updatedValue;
+        std::cout << "U's fval_1 updated value: " << fval_1 << std::endl;
+        while( std::abs(fval_2 - fval_1) > 0.001f )
+        {
+            fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
+        }
+        std::cout << "U's fval_2 updated value: " << fval_2 << std::endl;
+        return fval_2 * fval_1; 
     }
 };
 
-struct <#structname2#>
+struct AddAndMultUvals
 {
-    static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
+    static float ConvergeUvarsStatic( U* that, float* updatedValue )        //10
     {
-        std::cout << "U's <#name1#> value: " << that-><#name1#> << std::endl;
-        that-><#name1#> = <#updatedValue#>;
-        std::cout << "U's <#name1#> updated value: " << that-><#name1#> << std::endl;
-        while( std::abs(that-><#name2#> - that-><#name1#>) > 0.001f )
+        std::cout << "U's fval_1 value: " << that->fval_1 << std::endl;
+        that->fval_1 = *updatedValue;
+        std::cout << "U's fval_1 updated value: " << that->fval_1 << std::endl;
+        while( std::abs(that->fval_2 - that->fval_1 ) > 0.001f )
         {
-            /*
-             write something that makes the distance between that-><#name2#> and that-><#name1#> get smaller
-             */
-            that-><#name2#> += ;
+            that->fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
         }
-        std::cout << "U's <#name2#> updated value: " << that-><#name2#> << std::endl;
-        return that-><#name2#> * that-><#name1#>;
+        std::cout << "U's fval_2 updated value: " << that->fval_2 << std::endl;
+        return that->fval_2 * that->fval_1;
     }
 };
+
         
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -115,19 +121,19 @@ struct <#structname2#>
 
 int main()
 {
-    T <#name1#>( , );                                             //6
-    T <#name2#>( , );                                             //6
+    T pair1( 7, "foo" );                                             //6
+    T pair2( 11, "bar");                                             //6
     
-    <#structName1#> f;                                            //7
-    auto* smaller = f.compare( , );                              //8
+    CompareFuncForT f;                                            //7
+    auto* smaller = f.compare(&pair1 , &pair2);                              //8
     std::cout << "the smaller one is << " << smaller->name << std::endl; //9
     
-    U <#name3#>;
+    U myFirstU;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
+    std::cout << "[static func] ConvergeUvarsStatic's multiplied values: " << AddAndMultUvals::ConvergeUvarsStatic( &myFirstU, &updatedValue ) << std::endl;                  //11
     
-    U <#name4#>;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+    U mySecondU;
+    std::cout << "[member func] ConvergeUVars's multiplied values: " << mySecondU.ConvergeUVars( &updatedValue ) << std::endl;
 }
 
         
