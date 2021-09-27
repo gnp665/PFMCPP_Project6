@@ -74,7 +74,7 @@ struct CompareFuncForT                                //4
 struct U
 {
     float fval_1 { 0 }, fval_2 { 0 };
-    float ConvergeUVars( float* updatedValue )      //12
+    float convergeUVars( float* updatedValue )      //12
     {
         std::cout << "U's fval_1 value: " << fval_1 << std::endl;
         fval_1 = *updatedValue;
@@ -90,7 +90,7 @@ struct U
 
 struct AddAndMultUvals
 {
-    static float ConvergeUvarsStatic( U* that, float* updatedValue )        //10
+    static float convergeUVarsStatic( U* that, float* updatedValue )        //10
     {
         std::cout << "U's fval_1 value: " << that->fval_1 << std::endl;
         that->fval_1 = *updatedValue;
@@ -130,10 +130,10 @@ int main()
     
     U myFirstU;
     float updatedValue = 5.f;
-    std::cout << "[static func] ConvergeUvarsStatic's multiplied values: " << AddAndMultUvals::ConvergeUvarsStatic( &myFirstU, &updatedValue ) << std::endl;                  //11
+    std::cout << "[static func] convergeUVarsStatic's multiplied values: " << AddAndMultUvals::convergeUVarsStatic( &myFirstU, &updatedValue ) << std::endl;                  //11
     
     U mySecondU;
-    std::cout << "[member func] ConvergeUVars's multiplied values: " << mySecondU.ConvergeUVars( &updatedValue ) << std::endl;
+    std::cout << "[member func] convergeUVars's multiplied values: " << mySecondU.convergeUVars( &updatedValue ) << std::endl;
 }
 
         
