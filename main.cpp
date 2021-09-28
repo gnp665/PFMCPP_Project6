@@ -32,13 +32,10 @@ struct T
 
 struct CompareFuncForT                                //4
 {
-    T* compare(T* a, T* b) //5
-    {
-        if (a != nullptr && b != nullptr)
-        {
-            if( a->value < b->value ) return a;
-            if( a->value > b->value ) return b;
-        }
+    T* compare(T& a, T& b) //5
+    { 
+        if( a.value < b.value ) return &a;
+        if( b.value > b.value ) return &b;
         return nullptr;
     }
 };
@@ -46,45 +43,33 @@ struct CompareFuncForT                                //4
 struct U
 {
     float fval_1 { 0 }, fval_2 { 0 };
-    float convergeUVars( float* updatedValue )      //12
+    float convergeUVars( float const& updatedValue )    //12
     {
-        if (updatedValue != nullptr)
+        std::cout << "U's fval_1 value: " << fval_1 << std::endl;
+        fval_1 = updatedValue;
+        std::cout << "U's fval_1 updated value: " << fval_1 << std::endl;
+        while( std::abs(fval_2 - fval_1) > 0.001f )
         {
-            std::cout << "U's fval_1 value: " << fval_1 << std::endl;
-            fval_1 = *updatedValue;
-            std::cout << "U's fval_1 updated value: " << fval_1 << std::endl;
-            while( std::abs(fval_2 - fval_1) > 0.001f )
-            {
-                fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
-            }
-            std::cout << "U's fval_2 updated value: " << fval_2 << std::endl;
-            return fval_2 * fval_1; 
+            fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
         }
-
-        std::cout << "nullptr input - return code: ";
-        return -1.0f;
+        std::cout << "U's fval_2 updated value: " << fval_2 << std::endl;
+        return fval_2 * fval_1; 
     }
 };
 
 struct AddAndMultUvals
 {
-    static float convergeUVarsStatic( U* that, float* updatedValue )        //10
+    static float convergeUVarsStatic( U& that, float const& updatedValue )  //10
     {
-        if (that != nullptr &&updatedValue != nullptr)
+        std::cout << "U's fval_1 value: " << that.fval_1 << std::endl;
+        that.fval_1 = updatedValue;
+        std::cout << "U's fval_1 updated value: " << that.fval_1 << std::endl;
+        while( std::abs(that.fval_2 - that.fval_1 ) > 0.001f )
         {
-            std::cout << "U's fval_1 value: " << that->fval_1 << std::endl;
-            that->fval_1 = *updatedValue;
-            std::cout << "U's fval_1 updated value: " << that->fval_1 << std::endl;
-            while( std::abs(that->fval_2 - that->fval_1 ) > 0.001f )
-            {
-                that->fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
-            }
-            std::cout << "U's fval_2 updated value: " << that->fval_2 << std::endl;
-            return that->fval_2 * that->fval_1;
+            that.fval_2 += 0.5f;  // makes distance between fval_2 and fval_1 get smaller
         }
-
-        std::cout << "one or more nullptr inputs - return code: ";
-        return -1.0f;
+        std::cout << "U's fval_2 updated value: " << that.fval_2 << std::endl;
+        return that.fval_2 * that.fval_1;
     }
 };
 
@@ -109,7 +94,7 @@ int main()
     T pair2( 11, "bar");                                             //6
     
     CompareFuncForT f;                                            //7
-    auto* smaller = f.compare(&pair1 , &pair2);  
+    auto* smaller = f.compare( pair1, pair2 );  
     if (smaller != nullptr)
     {                            //8
         std::cout << "the smaller one is << " << smaller->name << std::endl; //9
@@ -121,10 +106,10 @@ int main()
 
     U myFirstU;
     float updatedValue = 5.f;
-    std::cout << "[static func] convergeUVarsStatic's multiplied values: " << AddAndMultUvals::convergeUVarsStatic( &myFirstU, &updatedValue ) << std::endl;                  //11
+    std::cout << "[static func] convergeUVarsStatic's multiplied values: " << AddAndMultUvals::convergeUVarsStatic( myFirstU, updatedValue ) << std::endl;                  //11
     
     U mySecondU;
-    std::cout << "[member func] convergeUVars's multiplied values: " << mySecondU.convergeUVars( &updatedValue ) << std::endl;
+    std::cout << "[member func] convergeUVars's multiplied values: " << mySecondU.convergeUVars( updatedValue ) << std::endl;
 }
 
         
