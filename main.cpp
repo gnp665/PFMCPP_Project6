@@ -43,7 +43,7 @@ struct CompareFuncForT                                //4
 struct U
 {
     float fval_1 { 0 }, fval_2 { 0 };
-    float convergeUVars( float const& updatedValue )    //12
+    float convergeUVars( float& updatedValue )    //12
     {
         std::cout << "U's fval_1 value: " << fval_1 << std::endl;
         fval_1 = updatedValue;
@@ -59,7 +59,7 @@ struct U
 
 struct AddAndMultUvals
 {
-    static float convergeUVarsStatic( U& that, float const& updatedValue )  //10
+    static float convergeUVarsStatic( U& that, float& updatedValue )  //10
     {
         std::cout << "U's fval_1 value: " << that.fval_1 << std::endl;
         that.fval_1 = updatedValue;
